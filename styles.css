@@ -1,0 +1,347 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.auth-container {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 90%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.auth-container h2 {
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+}
+
+.auth-container button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.auth-container button:hover {
+  background-color: #0056b3;
+}
+
+#auth-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.chat-container {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  background-color: #007bff;
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#chat-box {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.other {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+.message.user .message-bubble {
+  background-color: #007bff;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.message.other .message-bubble {
+  background-color: #e9ecef;
+  color: #000;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-input-container {
+  display: flex;
+  padding: 12px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+}
+
+#message-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+}
+
+#send-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin-left: 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#send-button:hover {
+  background-color: #0056b3;
+}
+
+/* Bouncing Animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.message.bounce {
+  animation: bounce 0.3s ease-in-out;
+}
+
+/* Context Menu */
+.context-menu {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.context-menu-item {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.context-menu-item:hover {
+  background-color: #f0f2f5;
+}
+
+/* Reply Container */
+.reply-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+/* Reply Box (Message Being Replied To) */
+.reply-box {
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #666;
+  max-width: 80%;
+  align-self: flex-start; /* Align to the left */
+}
+
+/* Reply Message (The Actual Reply) */
+.reply-message {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  max-width: 80%;
+  align-self: flex-end; /* Align to the right */
+}
+
+/* Adjust message alignment for replies */
+.message.reply {
+  margin-top: 16px;
+}
+
+/* Reply Container */
+.reply-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  align-self: flex-start; /* Align to the left for both users */
+}
+
+/* Reply Box (Message Being Replied To) */
+.reply-box {
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #666;
+  max-width: 80%;
+}
+
+/* Reply Message (The Actual Reply) */
+.reply-message {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  max-width: 80%;
+  align-self: flex-end; /* Align to the right for the current user */
+}
+
+/* Adjust alignment for the opposite user */
+.message.other .reply-message {
+  background-color: #e9ecef;
+  color: #000;
+  align-self: flex-start; /* Align to the left for the opposite user */
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.bounce {
+  animation: bounce 0.5s ease-in-out;
+}
+
+/* Highlight Animation */
+@keyframes highlight {
+  0% {
+    background-color: rgba(0, 123, 255, 0.1);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight {
+  animation: highlight 1s ease-in-out;
+}
+
+/* Reply Box (Message Being Replied To) */
+.reply-box {
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #666;
+  max-width: 80%;
+}
+
+/* Align reply box to the right for the main user */
+.message.user .reply-box {
+  align-self: flex-end;
+  background-color: #e1f3ff; /* Light blue for the main user */
+}
+
+/* Align reply box to the left for the opposite user */
+.message.other .reply-box {
+  align-self: flex-start;
+  background-color: #f0f2f5; /* Light grey for the opposite user */
+}
+
+/* Popup */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#popup-close {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#popup-close:hover {
+  background-color: #0056b3;
+}

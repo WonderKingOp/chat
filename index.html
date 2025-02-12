@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat with GF 💬</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="auth-container" class="auth-container">
+    <h2>Welcome to Our Chat 💕</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="login-button">Login</button>
+    <p id="auth-message"></p>
+  </div>
+
+  <div id="chat-container" class="chat-container" style="display: none;">
+    <div class="chat-header">Chat with 💕</div>
+    <div id="chat-box"></div>
+    <div class="chat-input-container">
+      <input type="text" id="message-input" placeholder="Type a message...">
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  <div id="context-menu" class="context-menu">
+    <div class="context-menu-item" id="reply-option">Reply</div>
+    <div class="context-menu-item" id="delete-option">Delete</div>
+    <!-- Add more options here in the future -->
+  </div>
+
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <p id="popup-message"></p>
+      <button id="popup-close">OK</button>
+    </div>
+  </div>
+
+  <!-- Firebase and App Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
