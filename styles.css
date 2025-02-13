@@ -104,11 +104,14 @@ body {
 }
 
 .message-bubble {
-  max-width: 70%;
-  padding: 10px 16px;
-  border-radius: 16px;
-  font-size: 14px;
-  word-wrap: break-word;
+  max-width: 70%; /* Adjust based on your design */
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #e1e1e1; /* Adjust color as needed */
+  margin-bottom: 10px;
+  word-break: break-word; /* Force wrap long words */
+  overflow-wrap: break-word; /* Alternative for better browser support */
+  white-space: pre-wrap; /* Preserve line breaks and wrap text */
 }
 
 .message.user .message-bubble {
@@ -343,5 +346,167 @@ body {
 }
 
 #popup-close:hover {
+  background-color: #0056b3;
+}
+
+/* Reply Preview Box */
+.reply-preview {
+  display: none; /* Hidden by default */
+  background-color: #e1f3ff; /* Light blue background */
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 8px 12px;
+  font-size: 14px;
+  color: #007bff; /* Blue text */
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reply-preview span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%; /* Limit width to prevent overflow */
+}
+
+#cancel-reply-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+#cancel-reply-button:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
+/* Highlight Animation */
+@keyframes highlight {
+  0% {
+    background-color: rgba(0, 123, 255, 0.1);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight {
+  animation: highlight 1s ease-in-out;
+}
+
+#message-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+  resize: none; /* Prevent manual resizing */
+  overflow-y: auto; /* Enable vertical scrolling */
+  line-height: 20px; /* Line height for better readability */
+  min-height: 20px; /* Minimum height (1 line) */
+  max-height: 80px; /* Maximum height (4 lines) */
+  white-space: pre-wrap; /* Allow text to wrap to the next line */
+  word-wrap: break-word; /* Break long words to the next line */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+}
+
+/* Hide scrollbar for Chrome/Safari */
+#message-input::-webkit-scrollbar {
+  display: none;
+}
+
+/* Adjust the chat input container to handle expanded input */
+.chat-input-container {
+  display: flex;
+  padding: 12px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  align-items: flex-end; /* Align items to the bottom */
+}
+
+/* Context Menu */
+.context-menu {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.context-menu-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.context-menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Edit Mode */
+.edit-mode {
+  position: relative;
+}
+
+.edit-textarea {
+  width: 100%; /* Default width */
+  height: auto; /* Default height */
+  padding: 10px; /* Match the padding of the message bubble */
+  border: 1px solid #ddd; /* Match the border of the message bubble */
+  border-radius: 15px; /* Match the border radius of the message bubble */
+  font-size: 14px; /* Match the font size of the message bubble */
+  resize: none; /* Prevent manual resizing */
+  overflow: hidden; /* Hide scrollbars */
+  box-sizing: border-box; /* Include padding and border in the width/height */
+}
+
+.save-button {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+/* Scroll to Bottom Button */
+.scroll-to-bottom-button {
+  display: none; /* Hidden by default */
+  position: absolute; /* Position relative to the chat container */
+  bottom: 80px; /* Adjust this value to place it above the input area */
+  right: 20px; /* Distance from the right of the chat container */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Ensure it's above other elements */
+  display: flex; /* Use flexbox for centering */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+.scroll-to-bottom-button:hover {
   background-color: #0056b3;
 }

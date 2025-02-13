@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Chat with GF 💬</title>
+  <title>Chat 💬</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,17 +17,39 @@
 
   <div id="chat-container" class="chat-container" style="display: none;">
     <div class="chat-header">Chat with 💕</div>
-    <div id="chat-box"></div>
+    <div id="chat-box">
+    </div>
+    <!-- Scroll to Bottom Button -->
+    <div id="scroll-to-bottom-button" class="scroll-to-bottom-button">` ↓</div>
+    
+    <!-- Add the reply preview box here -->
+    <div id="reply-preview" class="reply-preview">
+      <span id="reply-preview-text"></span>
+      <button id="cancel-reply-button">✕</button>
+    </div>
     <div class="chat-input-container">
-      <input type="text" id="message-input" placeholder="Type a message...">
+      <textarea id="message-input" placeholder="Type your message..."></textarea>
       <button id="send-button">Send</button>
     </div>
   </div>
 
+  <!-- Chat Window -->
+<div id="chat-window"></div>
+
+<!-- Edit Mode Template (Hidden by Default) -->
+<template id="edit-mode-template">
+  <div class="edit-mode">
+    <textarea class="edit-textarea"></textarea>
+    <button class="save-button">✔</button>
+  </div>
+</template>
+
   <!-- Context Menu -->
   <div id="context-menu" class="context-menu">
     <div class="context-menu-item" id="reply-option">Reply</div>
+    <div class="context-menu-item" id="edit-message">Edit</div>
     <div class="context-menu-item" id="delete-option">Delete</div>
+    <div class="context-menu-item" id="copy-option">Copy</div> 
     <!-- Add more options here in the future -->
   </div>
 
