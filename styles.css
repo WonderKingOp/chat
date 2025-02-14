@@ -103,16 +103,7 @@ body {
   justify-content: flex-start;
 }
 
-.message-bubble {
-  max-width: 70%; /* Adjust based on your design */
-  padding: 10px;
-  border-radius: 15px;
-  background-color: #e1e1e1; /* Adjust color as needed */
-  margin-bottom: 10px;
-  word-break: break-word; /* Force wrap long words */
-  overflow-wrap: break-word; /* Alternative for better browser support */
-  white-space: pre-wrap; /* Preserve line breaks and wrap text */
-}
+
 
 .message.user .message-bubble {
   background-color: #007bff;
@@ -157,16 +148,6 @@ body {
   background-color: #0056b3;
 }
 
-/* Bouncing Animation */
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
 .message.bounce {
   animation: bounce 0.3s ease-in-out;
 }
@@ -190,13 +171,6 @@ body {
 
 .context-menu-item:hover {
   background-color: #f0f2f5;
-}
-
-/* Reply Container */
-.reply-container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 12px;
 }
 
 /* Reply Box (Message Being Replied To) */
@@ -232,6 +206,7 @@ body {
   flex-direction: column;
   margin-bottom: 12px;
   align-self: flex-start; /* Align to the left for both users */
+  gap: 4px;
 }
 
 /* Reply Box (Message Being Replied To) */
@@ -383,16 +358,6 @@ body {
   color: #0056b3; /* Darker blue on hover */
 }
 
-/* Highlight Animation */
-@keyframes highlight {
-  0% {
-    background-color: rgba(0, 123, 255, 0.1);
-  }
-  100% {
-    background-color: transparent;
-  }
-}
-
 .highlight {
   animation: highlight 1s ease-in-out;
 }
@@ -509,4 +474,138 @@ body {
 
 .scroll-to-bottom-button:hover {
   background-color: #0056b3;
+}
+
+.message-bubble {
+  position: relative;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #e1e1e1;
+  margin-bottom: 10px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+
+.timestamp {
+  font-size: 11px;
+  color: #666;
+  margin-right: 5px;
+}
+
+.ticks {
+  font-size: 12px;
+  color: #666;
+}
+
+.ticks {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.user .ticks {
+  color: hsl(211, 100%, 69%) !important;
+}
+
+
+.reply-message .status-container {
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.reply-message .timestamp {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7); /* White with transparency for dark bubbles */
+}
+
+.message.other .reply-message .timestamp {
+  color: rgba(0, 0, 0, 0.6); /* Darker timestamp for light bubbles */
+}
+
+.reply-message .ticks {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.message.other .reply-message .ticks {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+
+/* Message Structure */
+.content-container {
+  position: relative;
+  max-width: 80%;
+}
+
+.text-container {
+  position: relative;
+  word-break: break-word;
+}
+
+.user .status-container {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.edited-label {
+  font-style: italic;
+  font-size: 0.65rem;
+}
+
+
+.reply-message {
+  background: #007bff;
+  color: white;
+  padding: 8px;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+
+.message.other .reply-message {
+  background: #e9ecef;
+  color: black;
+}
+
+/* Message Structure */
+.content-container {
+  position: relative;
+  max-width: 80%;
+}
+
+.text-container {
+  position: relative;
+  word-break: break-word;
+}
+
+.status-container {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.user .status-container {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.edited-label {
+  font-style: italic;
+  font-size: 0.65rem;
+}
+
+.reply-message {
+  background: #007bff;
+  color: white;
+  padding: 8px;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+
+.message.other .reply-message {
+  background: #e9ecef;
+  color: black;
 }

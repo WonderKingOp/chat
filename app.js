@@ -14,6 +14,7 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 const auth = firebase.auth();
 
+
 // DOM Elements
 const authContainer = document.getElementById('auth-container');
 const chatContainer = document.getElementById('chat-container');
@@ -71,13 +72,20 @@ sendButton.addEventListener('click', () => {
       text: message,
       sender: auth.currentUser.email,
       timestamp: firebase.database.ServerValue.TIMESTAMP,
-      replyTo: replyingTo ? replyingTo.key : null // Include reply reference
+      replyTo: replyingTo ? replyingTo.key : null,
+      status: 'sent',
+      edited: false // Add this line
     };
+
+    // If the sender is the opposite user, set status to 'read'
+    if (messageData.sender !== auth.currentUser.email) {
+      messageData.status = 'read';
+    }
 
     database.ref('messages').push(messageData)
       .then(() => {
         messageInput.value = "";
-        replyingTo = null; // Reset reply state
+        replyingTo = null;
         messageInput.placeholder = "Type a message...";
         calculateLines(messageInput);
       })
@@ -85,7 +93,6 @@ sendButton.addEventListener('click', () => {
         console.error("Error sending message:", error);
       });
   }
-  
 });
 
 // Receive Messages
@@ -102,58 +109,116 @@ function loadMessages() {
 
 // Function to display a message
 function displayMessage(message, key) {
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message', message.sender === auth.currentUser.email ? 'user' : 'other');
-  messageElement.dataset.key = key; // Store the message key for replies
+  let messageElement = chatBox.querySelector(`[data-key="${key}"]`);
 
-  // Add reply container if this is a reply
+  if (messageElement) {
+    // Update existing message
+    const textElement = messageElement.querySelector('.message-text');
+    if (textElement) textElement.textContent = message.text;
+    
+    // Update status
+    const statusContainer = messageElement.querySelector('.status-container');
+    if (statusContainer) {
+      const [timestamp, ticks, edited] = statusContainer.children;
+      // Update timestamp
+      const date = new Date(message.timestamp);
+      timestamp.textContent = date.toLocaleString('en-US', { 
+        hour: 'numeric', minute: '2-digit', hour12: true 
+      });
+      
+      // Update ticks
+      ticks.textContent = message.sender !== auth.currentUser.email ? '✓✓' : 
+        (message.status === 'sent' ? '✓' : '✓✓');
+      
+      // Update edited status
+      edited.style.display = message.edited ? 'inline' : 'none';
+    }
+    return;
+  }
+
+  // Create new message
+  messageElement = document.createElement('div');
+  messageElement.classList.add('message', message.sender === auth.currentUser.email ? 'user' : 'other');
+  messageElement.dataset.key = key;
+
+  // Message Content
+  const contentContainer = document.createElement('div');
+  contentContainer.classList.add('content-container');
+
+  // Text Container
+  const textContainer = document.createElement('div');
+  textContainer.classList.add('text-container');
+  
   if (message.replyTo) {
+    // Reply structure
     const replyContainer = document.createElement('div');
     replyContainer.classList.add('reply-container');
-
-    // Add reply box (message being replied to)
+    
+    // Reply box (original message)
     const replyBox = document.createElement('div');
     replyBox.classList.add('reply-box');
     replyBox.textContent = getMessageText(message.replyTo);
-    replyBox.dataset.replyTo = message.replyTo; // Link to the original message
+    replyBox.dataset.replyTo = message.replyTo;
+    addReplyBoxListener(replyBox, message.replyTo);
     replyContainer.appendChild(replyBox);
 
-    // Add click/touch listener to the reply box
-    addReplyBoxListener(replyBox, message.replyTo);
-
-    // Add reply message (the actual reply)
-    const bubble = document.createElement('div');
-    bubble.classList.add('reply-message');
-    bubble.textContent = message.text;
-    replyContainer.appendChild(bubble);
-
-    messageElement.appendChild(replyContainer);
-    messageElement.classList.add('reply'); // Add class for reply messages
+    // Reply message
+    const replyMessage = document.createElement('div');
+    replyMessage.classList.add('reply-message', 'message-text');
+    replyMessage.textContent = message.text;
+    textContainer.appendChild(replyMessage);
+    
+    replyContainer.appendChild(textContainer);
+    contentContainer.appendChild(replyContainer);
   } else {
-    // Regular message (not a reply)
-    const bubble = document.createElement('div');
-    bubble.classList.add('message-bubble');
-    bubble.textContent = message.text;
-    messageElement.appendChild(bubble);
+    // Regular message
+    const messageBubble = document.createElement('div');
+    messageBubble.classList.add('message-bubble', 'message-text');
+    messageBubble.textContent = message.text;
+    textContainer.appendChild(messageBubble);
+    contentContainer.appendChild(textContainer);
   }
 
+  // Status Container
+  const statusContainer = document.createElement('div');
+  statusContainer.classList.add('status-container');
+  
+  // Timestamp
+  const timestamp = document.createElement('span');
+  timestamp.classList.add('timestamp');
+  timestamp.textContent = new Date(message.timestamp).toLocaleString('en-US', { 
+    hour: 'numeric', minute: '2-digit', hour12: true 
+  });
+
+  // Edited Label
+  const edited = document.createElement('span');
+  edited.classList.add('edited-label');
+  edited.textContent = 'edited';
+  edited.style.display = message.edited ? 'inline' : 'none';
+
+  // Ticks
+  const ticks = document.createElement('span');
+  ticks.classList.add('ticks');
+  ticks.textContent = message.sender !== auth.currentUser.email ? '✓✓' : 
+    (message.status === 'sent' ? '✓' : '✓✓');
+
+  statusContainer.append(timestamp, edited, ticks);
+  contentContainer.appendChild(statusContainer);
+  messageElement.appendChild(contentContainer);
+
   chatBox.appendChild(messageElement);
-
-  // Add double-tap gesture for mobile
   addDoubleTapGesture(messageElement, key);
-
-  // Add right-click context menu for desktop
   addContextMenu(messageElement, key);
 }
 
 
-// Get the text of a message by its key (truncated to 35 characters)
+// Get the text of a message by its key (truncated to 25 characters)
 function getMessageText(key) {
   let messageText = "Original message not found";
   database.ref('messages/' + key).once('value', (snapshot) => {
     if (snapshot.exists()) {
       const fullText = snapshot.val().text;
-      messageText = fullText.length > 35 ? fullText.substring(0, 35) + "..." : fullText;
+      messageText = fullText.length > 25 ? fullText.substring(0, 25) + "..." : fullText;
     }
   });
   return messageText;
@@ -161,6 +226,9 @@ function getMessageText(key) {
 
 // Add double-tap gesture to a message (for mobile)
 function addDoubleTapGesture(element, key) {
+  const messageTextElement = element.querySelector('.message-text');
+const messageText = messageTextElement?.textContent;
+
   let lastTap = 0;
   const handleTap = () => {
     const currentTime = new Date().getTime();
@@ -180,6 +248,8 @@ function addDoubleTapGesture(element, key) {
       if (messageText) {
         replyingTo = { key, text: messageText };
         showReplyPreview(messageText); // Show the reply preview box
+        scrollToBottom();
+        messageInput.focus();
       } else {
         console.error("Could not find message text for reply.");
       }
@@ -224,9 +294,10 @@ replyOption.addEventListener('click', () => {
   if (selectedMessageKey) {
     const messageElement = chatBox.querySelector(`[data-key="${selectedMessageKey}"]`);
     if (messageElement) {
-      const messageBubble = messageElement.querySelector('.message-bubble');
-      const replyMessage = messageElement.querySelector('.reply-message');
-      const messageText = messageBubble ? messageBubble.textContent : replyMessage ? replyMessage.textContent : null;
+      // In context menu reply handler:
+const messageTextElement = messageElement.querySelector('.message-text');
+const messageText = messageTextElement?.textContent;
+      // const messageText = messageBubble ? messageBubble.textContent : replyMessage ? replyMessage.textContent : null;
 
       if (messageText) {
         replyingTo = { key: selectedMessageKey, text: messageText };
@@ -237,6 +308,7 @@ replyOption.addEventListener('click', () => {
     }
   }
   contextMenu.style.display = 'none';
+  messageInput.focus();
   scrollToBottom();
 });
 
@@ -317,11 +389,26 @@ auth.onAuthStateChanged((user) => {
     loadMessages(); // Load existing messages
 
     // Listen for new messages
-    database.ref('messages').on('child_added', (snapshot) => {
-      const message = snapshot.val();
-      displayMessage(message, snapshot.key);
-      chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
-    });
+database.ref('messages').on('child_added', (snapshot) => {
+  const message = snapshot.val();
+  const messageKey = snapshot.key;
+
+  // Update status to 'read' if the message is from the other user
+  if (message.sender !== auth.currentUser.email && message.status === 'sent') {
+    database.ref('messages/' + messageKey).update({ status: 'read' })
+      .then(() => {
+        console.log("Message status updated to 'read'.");
+      })
+      .catch((error) => {
+        console.error("Error updating message status:", error);
+      });
+  }
+
+  // Display the message
+  displayMessage(message, messageKey);
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+
 
     // Listen for removed messages
     database.ref('messages').on('child_removed', (snapshot) => {
@@ -342,29 +429,44 @@ auth.onAuthStateChanged((user) => {
       });
     });
 
-    // Listen for updated messages (THIS IS THE CRITICAL PART)
+    // Listen for message changes
     database.ref('messages').on('child_changed', (snapshot) => {
       const updatedMessage = snapshot.val();
       const messageKey = snapshot.key;
-
+    
       // Find the message element in the DOM
       const messageElement = chatBox.querySelector(`[data-key="${messageKey}"]`);
       if (messageElement) {
-        // Update the message text in the DOM
-        const messageBubble = messageElement.querySelector('.message-bubble');
-        const replyMessage = messageElement.querySelector('.reply-message');
-
-        if (messageBubble) {
-          // Update regular message text
-          messageBubble.textContent = updatedMessage.text;
+        // Update the message text
+        const messageTextElement = messageElement.querySelector('.message-text');
+        if (messageTextElement) {
+          messageTextElement.textContent = updatedMessage.text;
         }
-
-        if (replyMessage) {
-          // Update replied message text
-          replyMessage.textContent = updatedMessage.text;
+    
+        // Update the edited label
+        const editedLabel = messageElement.querySelector('.edited-label');
+        if (editedLabel) {
+          editedLabel.style.display = updatedMessage.edited ? 'inline' : 'none';
+        }
+    
+        // Update the timestamp (if needed)
+        const timestamp = messageElement.querySelector('.timestamp');
+        if (timestamp) {
+          const date = new Date(updatedMessage.timestamp);
+          timestamp.textContent = date.toLocaleString('en-US', { 
+            hour: 'numeric', minute: '2-digit', hour12: true 
+          });
+        }
+    
+        // Update the ticks (if needed)
+        const ticks = messageElement.querySelector('.ticks');
+        if (ticks) {
+          ticks.textContent = updatedMessage.sender !== auth.currentUser.email ? '✓✓' : 
+            (updatedMessage.status === 'sent' ? '✓' : '✓✓');
         }
       }
     });
+
   } else {
     authContainer.style.display = 'block';
     chatContainer.style.display = 'none';
@@ -529,16 +631,22 @@ function saveChanges(messageBubble) {
       const messageKey = messageElement.dataset.key; // Get the message key
 
       // Update the message in Firebase
-      database.ref(`messages/${messageKey}`).update({ text: newMessage })
+      database.ref(`messages/${messageKey}`).update({ 
+        text: newMessage,
+        edited: true 
+      })
         .then(() => {
           console.log("Message updated in Firebase.");
+
+          // const textElement = messageElement.querySelector('.message-text'); //-----------------------
+          // if (textElement) textElement.textContent = newMessage;                //------------------------
 
           // Update reply boxes for the current user
           const replyBoxes = chatBox.querySelectorAll('.reply-box');
           replyBoxes.forEach((replyBox) => {
             if (replyBox.dataset.replyTo === messageKey) {
-              replyBox.textContent = newMessage.length > 35
-                ? newMessage.substring(0, 35) + "..."
+              replyBox.textContent = newMessage.length > 25
+                ? newMessage.substring(0, 25) + "..."
                 : newMessage;
             }
           });
@@ -600,41 +708,6 @@ document.getElementById("edit-message").addEventListener("click", () => {
   contextMenu.style.display = 'none';
 });
 
-// Listen for changes to messages in Firebase
-database.ref('messages').on('child_changed', (snapshot) => {
-  const updatedMessage = snapshot.val();
-  const messageKey = snapshot.key;
-
-  // Find the message element in the DOM
-  const messageElement = chatBox.querySelector(`[data-key="${messageKey}"]`);
-  if (messageElement) {
-    // Update the message text in the DOM
-    const messageBubble = messageElement.querySelector('.message-bubble');
-    const replyMessage = messageElement.querySelector('.reply-message');
-
-    if (messageBubble) {
-      // Update regular message text
-      messageBubble.textContent = updatedMessage.text;
-    }
-
-    if (replyMessage) {
-      // Update replied message text
-      replyMessage.textContent = updatedMessage.text;
-    }
-  }
-
-  // Update all reply boxes that reference this message
-  const replyBoxes = chatBox.querySelectorAll('.reply-box');
-  replyBoxes.forEach((replyBox) => {
-    if (replyBox.dataset.replyTo === messageKey) {
-      // Update the reply box with the edited message
-      replyBox.textContent = updatedMessage.text.length > 35
-        ? updatedMessage.text.substring(0, 35) + "..."
-        : updatedMessage.text;
-    }
-  });
-});
-
 
 // Handle the "Copy" option in the context menu
 document.getElementById('copy-option').addEventListener('click', () => {
@@ -687,3 +760,27 @@ chatBox.addEventListener('scroll', () => {
 document.getElementById('scroll-to-bottom-button').addEventListener('click', () => {
   scrollToBottom();
 });
+
+//data fetched by other user
+database.ref('messages').on('child_added', (snapshot) => {
+  const message = snapshot.val();
+  const messageKey = snapshot.key;
+
+  // If the message is from the opposite user, set status to 'read'
+  if (message.sender !== auth.currentUser.email && message.status === 'sent') {
+    database.ref('messages/' + messageKey).update({ status: 'read' })
+      .then(() => {
+        console.log("Message status updated to 'read'.");
+      })
+      .catch((error) => {
+        console.error("Error updating message status:", error);
+      });
+  }
+
+  // Display the message
+  displayMessage(message, messageKey);
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+
+
