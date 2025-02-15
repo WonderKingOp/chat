@@ -1,11 +1,78 @@
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f0f2f5;
+  background-color: #3c3c3c;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+}
+
+/* Mobile & Tablet: Full width/height */
+@media (max-width: 768px) {
+  .chat-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100vh !important;
+    border-radius: 0;
+  }
+
+  body {
+    padding: 0;
+    align-items: stretch; /* Fill vertical space */
+  }
+}
+
+/* Slim scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+#chat-box::-webkit-scrollbar {
+  width: 6px; /* Slim width for vertical scrollbar */
+  height: 6px; /* Slim height for horizontal scrollbar */
+}
+
+#chat-box::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light grey track */
+  border-radius: 3px; /* Rounded corners */
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+  background: #888; /* Grey scrollbar thumb */
+  border-radius: 3px; /* Rounded corners */
+}
+
+#chat-box::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker grey on hover */
+}
+
+/* Slim scrollbar for Firefox */
+#chat-box {
+  scrollbar-width: thin; /* Makes the scrollbar slim */
+  scrollbar-color: #888 #f1f1f1; /* Thumb and track color */
+}
+
+/* Apply the same scrollbar styling to other scrollable elements if needed */
+.message-input::-webkit-scrollbar {
+  width: 4px; /* Even slimmer for textarea */
+  height: 4px;
+}
+
+.message-input::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.message-input::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2px;
+}
+
+.message-input::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Firefox scrollbar for textarea */
+.message-input {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }
 
 .auth-container {
@@ -24,7 +91,7 @@ body {
 }
 
 .auth-container input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
@@ -61,7 +128,8 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 400px;
-  height: 80vh;
+  height: 100vh;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -173,28 +241,6 @@ body {
   background-color: #f0f2f5;
 }
 
-/* Reply Box (Message Being Replied To) */
-.reply-box {
-  background-color: #f0f2f5;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 4px;
-  font-size: 12px;
-  color: #666;
-  max-width: 80%;
-  align-self: flex-start; /* Align to the left */
-}
-
-/* Reply Message (The Actual Reply) */
-.reply-message {
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 8px;
-  padding: 8px;
-  max-width: 80%;
-  align-self: flex-end; /* Align to the right */
-}
-
 /* Adjust message alignment for replies */
 .message.reply {
   margin-top: 16px;
@@ -204,44 +250,30 @@ body {
 .reply-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
-  align-self: flex-start; /* Align to the left for both users */
   gap: 4px;
+  max-width: 100%;
 }
 
 /* Reply Box (Message Being Replied To) */
 .reply-box {
-  background-color: #f0f2f5;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 4px;
-  font-size: 12px;
+  background: #f0f2f5;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.9em;
   color: #666;
-  max-width: 80%;
+  max-width: 100%;
+  align-self: flex-start;
 }
 
-/* Reply Message (The Actual Reply) */
-.reply-message {
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 8px;
-  padding: 8px;
-  max-width: 80%;
-  align-self: flex-end; /* Align to the right for the current user */
-}
-
-/* Adjust alignment for the opposite user */
-.message.other .reply-message {
-  background-color: #e9ecef;
-  color: #000;
-  align-self: flex-start; /* Align to the left for the opposite user */
-}
 
 /* Bounce Animation */
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -256,6 +288,7 @@ body {
   0% {
     background-color: rgba(0, 123, 255, 0.1);
   }
+
   100% {
     background-color: transparent;
   }
@@ -265,27 +298,18 @@ body {
   animation: highlight 1s ease-in-out;
 }
 
-/* Reply Box (Message Being Replied To) */
-.reply-box {
-  background-color: #f0f2f5;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 4px;
-  font-size: 12px;
-  color: #666;
-  max-width: 80%;
-}
-
 /* Align reply box to the right for the main user */
 .message.user .reply-box {
   align-self: flex-end;
-  background-color: #e1f3ff; /* Light blue for the main user */
+  background-color: #e1f3ff;
+  /* Light blue for the main user */
 }
 
 /* Align reply box to the left for the opposite user */
 .message.other .reply-box {
   align-self: flex-start;
-  background-color: #f0f2f5; /* Light grey for the opposite user */
+  background-color: #f0f2f5;
+  /* Light grey for the opposite user */
 }
 
 /* Popup */
@@ -326,13 +350,16 @@ body {
 
 /* Reply Preview Box */
 .reply-preview {
-  display: none; /* Hidden by default */
-  background-color: #e1f3ff; /* Light blue background */
+  display: none;
+  /* Hidden by default */
+  background-color: #e1f3ff;
+  /* Light blue background */
   padding: 8px 12px;
   border-radius: 8px;
   margin: 8px 12px;
   font-size: 14px;
-  color: #007bff; /* Blue text */
+  color: #007bff;
+  /* Blue text */
   align-items: center;
   justify-content: space-between;
 }
@@ -342,7 +369,8 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 80%; /* Limit width to prevent overflow */
+  max-width: 80%;
+  /* Limit width to prevent overflow */
 }
 
 #cancel-reply-button {
@@ -355,7 +383,8 @@ body {
 }
 
 #cancel-reply-button:hover {
-  color: #0056b3; /* Darker blue on hover */
+  color: #0056b3;
+  /* Darker blue on hover */
 }
 
 .highlight {
@@ -369,15 +398,24 @@ body {
   border-radius: 20px;
   outline: none;
   font-size: 14px;
-  resize: none; /* Prevent manual resizing */
-  overflow-y: auto; /* Enable vertical scrolling */
-  line-height: 20px; /* Line height for better readability */
-  min-height: 20px; /* Minimum height (1 line) */
-  max-height: 80px; /* Maximum height (4 lines) */
-  white-space: pre-wrap; /* Allow text to wrap to the next line */
-  word-wrap: break-word; /* Break long words to the next line */
-  scrollbar-width: none; /* Hide scrollbar for Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+  resize: none;
+  /* Prevent manual resizing */
+  overflow-y: auto;
+  /* Enable vertical scrolling */
+  line-height: 20px;
+  /* Line height for better readability */
+  min-height: 20px;
+  /* Minimum height (1 line) */
+  max-height: 80px;
+  /* Maximum height (4 lines) */
+  white-space: pre-wrap;
+  /* Allow text to wrap to the next line */
+  word-wrap: break-word;
+  /* Break long words to the next line */
+  scrollbar-width: none;
+  /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none;
+  /* Hide scrollbar for IE/Edge */
 }
 
 /* Hide scrollbar for Chrome/Safari */
@@ -391,7 +429,8 @@ body {
   padding: 12px;
   background-color: #fff;
   border-top: 1px solid #ddd;
-  align-items: flex-end; /* Align items to the bottom */
+  align-items: flex-end;
+  /* Align items to the bottom */
 }
 
 /* Context Menu */
@@ -420,15 +459,24 @@ body {
 }
 
 .edit-textarea {
-  width: 100%; /* Default width */
-  height: auto; /* Default height */
-  padding: 10px; /* Match the padding of the message bubble */
-  border: 1px solid #ddd; /* Match the border of the message bubble */
-  border-radius: 15px; /* Match the border radius of the message bubble */
-  font-size: 14px; /* Match the font size of the message bubble */
-  resize: none; /* Prevent manual resizing */
-  overflow: hidden; /* Hide scrollbars */
-  box-sizing: border-box; /* Include padding and border in the width/height */
+  width: 100%;
+  /* Default width */
+  height: auto;
+  /* Default height */
+  padding: 10px;
+  /* Match the padding of the message bubble */
+  border: 1px solid #ddd;
+  /* Match the border of the message bubble */
+  border-radius: 15px;
+  /* Match the border radius of the message bubble */
+  font-size: 14px;
+  /* Match the font size of the message bubble */
+  resize: none;
+  /* Prevent manual resizing */
+  overflow: hidden;
+  /* Hide scrollbars */
+  box-sizing: border-box;
+  /* Include padding and border in the width/height */
 }
 
 .save-button {
@@ -454,7 +502,7 @@ body {
 /* Scroll to Bottom Button */
 .scroll-to-bottom-button {
   display: none; /* Hidden by default */
-  position: absolute; /* Position relative to the chat container */
+  position: absolute;
   bottom: 80px; /* Adjust this value to place it above the input area */
   right: 20px; /* Distance from the right of the chat container */
   background-color: #007bff;
@@ -467,7 +515,7 @@ body {
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: 1000; /* Ensure it's above other elements */
-  display: flex; /* Use flexbox for centering */
+  display: flex;
   align-items: center; /* Center vertically */
   justify-content: center; /* Center horizontally */
 }
@@ -476,15 +524,21 @@ body {
   background-color: #0056b3;
 }
 
+.scroll-to-bottom-button svg {
+  width: 24px; /* Adjust size as needed */
+  height: 24px; /* Adjust size as needed */
+  fill: #ffffff; /* Ensure the icon is white */
+}
+
 .message-bubble {
-  position: relative;
-  padding: 10px;
-  border-radius: 15px;
-  background-color: #e1e1e1;
-  margin-bottom: 10px;
+  background: #007bff;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 18px;
+  max-width: 100%;
   word-break: break-word;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
+  position: relative;
+  margin: 4px 0;
 }
 
 
@@ -516,11 +570,13 @@ body {
 
 .reply-message .timestamp {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.7); /* White with transparency for dark bubbles */
+  color: rgba(255, 255, 255, 0.7);
+  /* White with transparency for dark bubbles */
 }
 
 .message.other .reply-message .timestamp {
-  color: rgba(0, 0, 0, 0.6); /* Darker timestamp for light bubbles */
+  color: rgba(0, 0, 0, 0.6);
+  /* Darker timestamp for light bubbles */
 }
 
 .reply-message .ticks {
@@ -533,19 +589,14 @@ body {
 }
 
 
-/* Message Structure */
-.content-container {
-  position: relative;
-  max-width: 80%;
-}
-
 .text-container {
-  position: relative;
-  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
 }
 
 .user .status-container {
-  color: rgba(255, 255, 255, 0.7);
+  /* color: rgba(255, 255, 255, 0.7); */
 }
 
 .edited-label {
@@ -557,14 +608,10 @@ body {
 .reply-message {
   background: #007bff;
   color: white;
-  padding: 8px;
-  border-radius: 12px;
-  margin-top: 4px;
-}
-
-.message.other .reply-message {
-  background: #e9ecef;
-  color: black;
+  padding: 12px 16px;
+  border-radius: 18px;
+  max-width: 100%;
+  word-break: break-word;
 }
 
 /* Message Structure */
@@ -573,23 +620,26 @@ body {
   max-width: 80%;
 }
 
-.text-container {
-  position: relative;
-  word-break: break-word;
+/* Add this rule to override max-width for replies */
+.content-container.has-reply {
+  max-width: 100% !important;
+}
+
+/* Alignment fixes */
+.message.user .content-container {
+  align-items: flex-end;
+}
+
+.message.other .content-container {
+  align-items: flex-start;
 }
 
 .status-container {
   display: flex;
   gap: 6px;
   align-items: center;
-  justify-content: flex-end;
   margin-top: 4px;
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.5);
-}
-
-.user .status-container {
-  color: rgba(255, 255, 255, 0.7);
+  padding: 0 8px;
 }
 
 .edited-label {
@@ -597,15 +647,27 @@ body {
   font-size: 0.65rem;
 }
 
-.reply-message {
-  background: #007bff;
-  color: white;
-  padding: 8px;
-  border-radius: 12px;
-  margin-top: 4px;
-}
 
 .message.other .reply-message {
   background: #e9ecef;
   color: black;
+}
+
+.message.user .text-container {
+  margin-left: auto;
+  /* Push the container to the right */
+}
+
+.message.user .reply-message {
+  margin-left: auto;
+  /* Align to the right for the current user */
+}
+
+.message.other .text-container {
+  margin-right: auto;
+  /* Align to the left for the other user */
+}
+
+.message.user .status-container {
+  justify-content: flex-end;
 }

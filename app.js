@@ -103,7 +103,7 @@ function loadMessages() {
       const message = childSnapshot.val();
       displayMessage(message, childSnapshot.key);
     });
-    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
+    scrollToBottom(); // Auto-scroll to the latest message
   });
 }
 
@@ -150,6 +150,7 @@ function displayMessage(message, key) {
   textContainer.classList.add('text-container');
   
   if (message.replyTo) {
+    contentContainer.classList.add('has-reply'); // Add this line
     // Reply structure
     const replyContainer = document.createElement('div');
     replyContainer.classList.add('reply-container');
@@ -406,7 +407,7 @@ database.ref('messages').on('child_added', (snapshot) => {
 
   // Display the message
   displayMessage(message, messageKey);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  scrollToBottom();
 });
 
 
@@ -497,7 +498,7 @@ replyPreview.addEventListener('click', () => {
       messageElement.classList.add('highlight');
       setTimeout(() => {
         messageElement.classList.remove('highlight');
-      }, 1000); // Remove highlight after 1 second
+      }, 1200); // Remove highlight after 1.2 second
     }
   }
 });
@@ -741,7 +742,10 @@ document.getElementById('copy-option').addEventListener('click', () => {
 
 // Function to scroll to the bottom of the chat box
 function scrollToBottom() {
-  chatBox.scrollTop = chatBox.scrollHeight;
+  chatBox.scrollTo({
+    top: chatBox.scrollHeight,
+    behavior: 'smooth'
+  });
 }
 
 // Scroll event listener for the chat box
@@ -750,7 +754,7 @@ chatBox.addEventListener('scroll', () => {
 
   // Show the button if the user is not at the bottom
   if (chatBox.scrollTop + chatBox.clientHeight < chatBox.scrollHeight - 50) {
-    scrollButton.style.display = 'block';
+    scrollButton.style.display = 'flex';
   } else {
     scrollButton.style.display = 'none';
   }
@@ -779,7 +783,7 @@ database.ref('messages').on('child_added', (snapshot) => {
 
   // Display the message
   displayMessage(message, messageKey);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  scrollToBottom();
 });
 
 
